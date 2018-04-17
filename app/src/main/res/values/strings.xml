@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Lecteur simultané</string>
+    <string name="bottom_menu_choose">Choisir</string>
+    <string name="bottom_menu_properties">Propriétés</string>
+    <string name="bottom_menu_connection">Connexion</string>
+    <string name="bottom_menu_play">Lire</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

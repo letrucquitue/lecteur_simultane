@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_choose"
+        android:icon="@drawable/ic_youtube"
+        android:title="@string/bottom_menu_choose" />
+
+    <item
+        android:id="@+id/navigation_properties"
+        android:icon="@drawable/ic_equalizer"
+        android:title="@string/bottom_menu_properties" />
+
+    <item
+        android:id="@+id/navigation_connection"
+        android:icon="@drawable/ic_link"
+        android:title="@string/bottom_menu_connection" />
+
+    <item
+        android:id="@+id/navigation_play"
+        android:icon="@drawable/ic_play"
+        android:title="@string/bottom_menu_play" />
+
+</menu>
