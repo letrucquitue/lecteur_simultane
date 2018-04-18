@@ -1,10 +1,12 @@
 package ca.ulaval.ima.mp.fragment;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
@@ -46,7 +49,7 @@ public class ChooseVideoFragment extends Fragment {
     //private static String PLAYLIST_ID = "PLFsQleAWXsj_4yDeebiIADdH5FMayBiJo";//here you should use your playlist id for testing purpose you can use this api also
     //private static String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=" + PLAYLIST_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY + "";
 
-    private TextView search;
+    private EditText search;
     private RecyclerView mList_videos = null;
     private VideoListAdapter adapter = null;
     private ArrayList<VideoModel> mListData = new ArrayList<>();
@@ -68,7 +71,7 @@ public class ChooseVideoFragment extends Fragment {
         new RequestYoutubeAPI().execute();
 
         //Gestion du champ "Rechercher"
-        search = (TextView) view.findViewById(R.id.search_field);
+        search = (EditText) view.findViewById(R.id.search_field);
         //search event
         search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -114,12 +117,26 @@ public class ChooseVideoFragment extends Fragment {
     //Initialisation de la liste de videos affichees dans l'onglet "Choisir"
     private void initList(ArrayList<VideoModel> mListData) {
         mList_videos.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //Adapter qui va gerer le clic sur un element
         adapter = new VideoListAdapter(getActivity(), mListData, new OnItemClickListener() {
             @Override
             public void onItemClick(VideoModel item) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                //maj du bottom navigation view
+                BottomNavigationView nav = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
+                nav.setSelectedItemId(R.id.navigation_properties);
+
+                //go to properties fragment with video id parameter
+                PropertiesFragment fragment = new PropertiesFragment();
+                Bundle arguments = new Bundle();
+                arguments.putString( "video_id" , item.getId());
+                fragment.setArguments(arguments);
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.main_content, fragment , "fragment_properties");
+                ft.commit();
+
+                /*Intent intent = new Intent(getActivity(), MainActivity.class);
                 intent.putExtra(VideoModel.class.toString(), item);
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
         mList_videos.setAdapter(adapter);
@@ -196,11 +213,10 @@ public class ChooseVideoFragment extends Fragment {
                         if (json.getString("kind").equals("youtube#searchResult")) {
                             VideoModel youtubeObject = new VideoModel();
                             JSONObject jsonSnippet = json.getJSONObject("snippet");
-                            String video_id = "";
-                            if (jsonSnippet.has("resourceId")) {
-                                JSONObject jsonResource = jsonSnippet.getJSONObject("resourceId");
-                                video_id = jsonResource.getString("videoId");
-
+                            JSONObject jsonId = json.getJSONObject("id");
+                            String video_id = "undefined";
+                            if (jsonId.has("videoId")) {
+                                video_id = jsonId.getString("videoId");
                             }
                             String title = jsonSnippet.getString("title");
                             String description = jsonSnippet.getString("description");
