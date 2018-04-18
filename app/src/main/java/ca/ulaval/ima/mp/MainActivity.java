@@ -17,12 +17,14 @@ import ca.ulaval.ima.mp.fragment.PropertiesFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    private BottomNavigationView navigation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         //DEFAULT FRAGMENT
@@ -58,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    public BottomNavigationView getNavigationBottomView(){
+        return this.navigation;
+    }
 
     /*@SuppressWarnings("StatementWithEmptyBody")
     @Override

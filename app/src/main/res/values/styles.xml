@@ -8,4 +8,23 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="countdown" parent="Widget.AppCompat.SeekBar.Discrete">
+        <item name="android:progressBackgroundTint">#999999</item>
+        <item name="android:progressTint">@color/colorYtb</item>
+        <item name="android:colorControlActivated">@color/colorYtb</item>
+    </style>
+
+    <style name="title_properties">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="title_fragment">
+        <item name="android:textColor">@color/colorYtb</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
 </resources>
