@@ -14,6 +14,7 @@ public class VideoModel implements Parcelable {
     private String description = "";
     private String publishedAt = "";
     private String thumbnail = "";
+    private String duration = "";
 
     public String getId() {
         return id;
@@ -55,6 +56,14 @@ public class VideoModel implements Parcelable {
         this.thumbnail = thumbnail;
     }
 
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -67,6 +76,7 @@ public class VideoModel implements Parcelable {
         dest.writeString(description);
         dest.writeString(publishedAt);
         dest.writeString(thumbnail);
+        dest.writeString(duration);
     }
 
     public VideoModel() {
@@ -80,11 +90,12 @@ public class VideoModel implements Parcelable {
     }
 
     public void readFromParcel(Parcel in) {
+        this.id = in.readString();
         this.title = in.readString();
         this.description = in.readString();
         this.publishedAt = in.readString();
         this.thumbnail = in.readString();
-        this.id = in.readString();
+        this.duration = in.readString();
     }
 
     public static final Creator<VideoModel> CREATOR = new Creator<VideoModel>() {
