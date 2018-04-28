@@ -1,21 +1,22 @@
 package ca.ulaval.ima.mp;
 
 import android.app.FragmentManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 
+import ca.ulaval.ima.mp.fragment.BluetoothDevicesFragment.OnListFragmentInteractionListener;
 import ca.ulaval.ima.mp.fragment.ChooseVideoFragment;
 import ca.ulaval.ima.mp.fragment.ConnectionFragment;
+import ca.ulaval.ima.mp.fragment.HoteFragment;
 import ca.ulaval.ima.mp.fragment.PlayFragment;
 import ca.ulaval.ima.mp.fragment.PropertiesFragment;
+import ca.ulaval.ima.mp.model.BluetoothDevices;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,13 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public void onListFragmentInteraction(BluetoothDevices.BluetoothItem item) {
+
+    }
+
+
+
     /*@SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -80,5 +88,13 @@ public class MainActivity extends AppCompatActivity {
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }*/
+    public interface OnListFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onListFragmentInteraction(BluetoothDevices.BluetoothItem item);
+    }
 
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
 }

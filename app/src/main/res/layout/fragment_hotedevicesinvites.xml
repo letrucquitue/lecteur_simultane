@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="Nom_de_lappareil"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textStyle="bold" />
+
+    <ToggleButton
+        android:id="@+id/toggleAcceptConnection"
+        android:layout_width="238dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:paddingHorizontal="30dp"
+        android:text="ToggleButton"
+        android:textOff="Refuser"
+        android:textOn="Accepter"
+        android:textStyle="bold" />
+</LinearLayout>
