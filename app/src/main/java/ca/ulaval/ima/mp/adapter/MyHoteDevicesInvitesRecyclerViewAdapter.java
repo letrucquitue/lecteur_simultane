@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import ca.ulaval.ima.mp.R;
+import ca.ulaval.ima.mp.fragment.HoteFragment;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
 import ca.ulaval.ima.mp.model.SelfUser;
 
@@ -50,6 +51,7 @@ public class MyHoteDevicesInvitesRecyclerViewAdapter extends RecyclerView.Adapte
                         SelfUser.addConnectedDevices(device);
                         Log.d("Update devices list", "Ajout du device :" + device.getNom());
                         SelfUser.print();
+
                     }
                     catch(Exception e){
                         Log.d("Erreur mConnectedList",e.toString() );

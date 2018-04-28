@@ -2,6 +2,8 @@ package ca.ulaval.ima.mp.fragment;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,8 +21,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 
 import ca.ulaval.ima.mp.R;
 import ca.ulaval.ima.mp.adapter.MyBluetoothDevicesRecyclerViewAdapter;
@@ -41,6 +45,8 @@ public class HoteFragment extends android.app.Fragment {
 
     private Button mButtonUpdate;
     private Button mButtonDecouvert;
+
+    private UUID mUUID =  UUID.fromString("ff85d43d-7f0c-4aa8-a89f-c102ec9993db");
 
     public HoteFragment() {
     }
@@ -124,7 +130,6 @@ public class HoteFragment extends android.app.Fragment {
                 }
                 catch(Exception e){
                     Log.d("Probleme update", "update a echouer");
-                    Toast.makeText(getActivity().getApplicationContext(), "Impossible de mettre a jour la liste, veuillez reessayer", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -187,5 +192,47 @@ public class HoteFragment extends android.app.Fragment {
         getActivity().unregisterReceiver(mReceiver);
         super.onDestroy();
     }
+
+    public  void connectClient(BluetoothDevices device){
+        new AcceptThread().run();
+    }
+
+    //Classe qui cree un thread pour gerer les connections
+    //Cest le serveur/hote
+    private class AcceptThread extends Thread {
+        private final BluetoothServerSocket mmServerSocket;
+
+        public AcceptThread() {
+            BluetoothServerSocket tmp = null;
+            try {
+                tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("Lecteur simultané", mUUID);
+            } catch (IOException e) {
+                Log.e("Erreur serveur", "Socket's listen() method failed", e);
+            }
+            mmServerSocket = tmp;
+        }
+
+        public void run() {
+            BluetoothSocket socket = null;
+            while (true) {
+                try {
+                    socket = mmServerSocket.accept();
+                } catch (IOException e) {
+                    Log.e("Erreur serveur", "Socket's accept() method failed", e);
+                    break;
+                }
+            }
+        }
+
+        public void cancel() {
+            try {
+                mmServerSocket.close();
+            } catch (IOException e) {
+                Log.e("Erreur serveur", "Could not close the connect socket", e);
+            }
+        }
+    }
+
+
 
 }

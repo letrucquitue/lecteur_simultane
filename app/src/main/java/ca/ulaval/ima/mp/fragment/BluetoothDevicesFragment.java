@@ -3,6 +3,8 @@ package ca.ulaval.ima.mp.fragment;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +25,7 @@ import ca.ulaval.ima.mp.R;
 import ca.ulaval.ima.mp.adapter.MyBluetoothDevicesRecyclerViewAdapter;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
@@ -51,6 +54,8 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
     private Button mButtonUpdate;
     private Button mButtonDecouvrable;
 
+
+    private UUID mUUID =  UUID.fromString("ff85d43d-7f0c-4aa8-a89f-c102ec9993db");
 
     public BluetoothDevicesFragment() {
     }
@@ -132,7 +137,6 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
                 }
                 catch(Exception e){
                     Log.d("Probleme update", "update a echouer");
-                    Toast.makeText(getActivity().getApplicationContext(), "Impossible de mettre a jour la liste, veuillez reessayer", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -221,6 +225,46 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
 
     }
 
+    public class ConnectThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final BluetoothDevice mmDevice;
+
+        public ConnectThread(BluetoothDevice device) {
+            BluetoothSocket tmp = null;
+            mmDevice = device;
+
+            try {
+                tmp = device.createRfcommSocketToServiceRecord(mUUID);
+            } catch (IOException e) {
+                Log.e("Erreur client", "Socket's create() method failed", e);
+            }
+            mmSocket = tmp;
+        }
+
+        public void run() {
+            mBluetoothAdapter.cancelDiscovery();
+
+            try {
+                mmSocket.connect();
+            } catch (IOException connectException) {
+                try {
+                    mmSocket.close();
+                } catch (IOException closeException) {
+                    Log.e("Erreur client", "Could not close the client socket", closeException);
+                }
+                return;
+            }
+
+        }
+
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) {
+                Log.e("Erreur client", "Could not close the client socket", e);
+            }
+        }
+    }
 
 }
 
