@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import ca.ulaval.ima.mp.R;
-import ca.ulaval.ima.mp.fragment.dummy.DummyContent.DummyItem;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
 import ca.ulaval.ima.mp.model.SelfUser;
 

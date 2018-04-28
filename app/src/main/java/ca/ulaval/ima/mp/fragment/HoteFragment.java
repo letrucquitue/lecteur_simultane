@@ -45,22 +45,14 @@ public class HoteFragment extends android.app.Fragment {
     public HoteFragment() {
     }
 
-    public static BluetoothDevicesPairFragment newInstance(int columnCount) {
-        BluetoothDevicesPairFragment fragment = new BluetoothDevicesPairFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,13 +66,16 @@ public class HoteFragment extends android.app.Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
         recyclerView.setAdapter(new MyBluetoothDevicesRecyclerViewAdapter(mDeviceList, context));
-        Log.d("Nombre", "Entre23sdsd3!");
+
+
+        //On tente de trouver les appareils déja pairés
         Toast.makeText(context, "Recherche des appareils, veuillez patienter", Toast.LENGTH_LONG).show();
+
+
+        //On cherche les appareils déja pairés
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-
         if (pairedDevices.size() > 0) {
-            // There are paired devices. Get the name and address of each paired device.
             for (BluetoothDevice device : pairedDevices) {
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
@@ -92,23 +87,15 @@ public class HoteFragment extends android.app.Fragment {
                 Log.d("Nombre déja pairée", Integer.toString(mDeviceList.size()));
             }
         }
+
+        //On tente de trouver les appareils pas pairés
         mBluetoothAdapter.startDiscovery();
-        Log.d("Discovery", Boolean.toString(mBluetoothAdapter.isDiscovering()));
-        Log.d("Nombre", "dsfsdfs!");
-        Log.d("Discovery", Boolean.toString(mBluetoothAdapter.isDiscovering()));
         mReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
-                Log.d("Nombre", "dsfsdfs!");
-
-                //Finding devices
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                    // Get the BluetoothDevice object from the Intent
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    // Add the name and address to an array adapter to show in a ListView
                     mDeviceList.add(new BluetoothDevices(device.getName(), device.getAddress()));
-                    //new ConnectThread(device, true).start();
-
                 }
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
                 mAdapter = new MyHoteDevicesInvitesRecyclerViewAdapter(mDeviceList, getActivity().getApplicationContext());
@@ -118,7 +105,6 @@ public class HoteFragment extends android.app.Fragment {
 
             }
         };
-        Log.d("Discovery", "lol");
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         getActivity().registerReceiver(mReceiver, filter);
 
@@ -130,7 +116,7 @@ public class HoteFragment extends android.app.Fragment {
                 try{
                     Log.d("Update", "Update de la liste des appareils");
                     mDeviceList.clear();
-                    Toast.makeText(getActivity().getApplicationContext(), "Mise a jour de la liste, veuillez patienter", Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity().getApplicationContext(), "Mise à jour de la liste, veuillez patienter", Toast.LENGTH_LONG).show();
                     Log.d("Nombre appareils", Integer.toString(mDeviceList.size()));
                     lookforNonPairedDevices();
                     lookForPairedDevices();
@@ -138,7 +124,7 @@ public class HoteFragment extends android.app.Fragment {
                 }
                 catch(Exception e){
                     Log.d("Probleme update", "update a echouer");
-                    Toast.makeText(getActivity().getApplicationContext(), "Impossible de mettre a jour la liste, veuillez reessayer", Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity().getApplicationContext(), "Impossible de mettre a jour la liste, veuillez reessayer", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -161,6 +147,8 @@ public class HoteFragment extends android.app.Fragment {
         return view;
     }
 
+
+    //Lorsque on update les listes
     private void lookForPairedDevices(){
         Log.d("Update", "Update de la liste des appareils connectes");
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
@@ -182,7 +170,6 @@ public class HoteFragment extends android.app.Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
-
     }
 
     @Override
@@ -192,7 +179,6 @@ public class HoteFragment extends android.app.Fragment {
     }
 
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(BluetoothDevices.BluetoothItem item);
     }
 
@@ -200,7 +186,6 @@ public class HoteFragment extends android.app.Fragment {
     public void onDestroy() {
         getActivity().unregisterReceiver(mReceiver);
         super.onDestroy();
-
     }
 
 }

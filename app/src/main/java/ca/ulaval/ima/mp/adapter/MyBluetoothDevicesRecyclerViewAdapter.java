@@ -12,19 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ca.ulaval.ima.mp.R;
-import ca.ulaval.ima.mp.fragment.BluetoothDevicesFragment.OnListFragmentInteractionListener;
-import ca.ulaval.ima.mp.adapter.DummyContent.DummyItem;
-import ca.ulaval.ima.mp.fragment.PlayFragment;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
 import ca.ulaval.ima.mp.model.SelfUser;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyBluetoothDevicesRecyclerViewAdapter extends RecyclerView.Adapter<MyBluetoothDevicesRecyclerViewAdapter.ViewHolder> {
 
     private List<BluetoothDevices> mDevices;
@@ -58,6 +50,7 @@ public class MyBluetoothDevicesRecyclerViewAdapter extends RecyclerView.Adapter<
 
                 Toast.makeText(getContext(), "Tentative de connection avec l hote", Toast.LENGTH_LONG).show();
                 SelfUser.setmHost(device);
+
                 //TODO: Lorsque lhote envoie la video, on change de tab
                 /*
                 FragmentManager manager = ((Activity) getContext()).getFragmentManager();

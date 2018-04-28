@@ -3,16 +3,11 @@ package ca.ulaval.ima.mp.fragment;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,8 +23,6 @@ import ca.ulaval.ima.mp.R;
 import ca.ulaval.ima.mp.adapter.MyBluetoothDevicesRecyclerViewAdapter;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
@@ -50,31 +43,18 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
-    private UUID uuid;
     private ArrayList<BluetoothDevices> mDeviceList = new ArrayList<BluetoothDevices>();
     private BluetoothAdapter mBluetoothAdapter;
     private BroadcastReceiver mReceiver;
-    private BluetoothSocket socket;
-    private BluetoothDevice device, devicePair;
-    private BufferedReader input;
-    private OutputStream out;
-    private BluetoothDevice mDevice;
     private MyBluetoothDevicesRecyclerViewAdapter mAdapter;
 
     private Button mButtonUpdate;
     private Button mButtonDecouvrable;
 
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public BluetoothDevicesFragment() {
-        initialize(context, UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"));
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static BluetoothDevicesFragment newInstance(int columnCount) {
         BluetoothDevicesFragment fragment = new BluetoothDevicesFragment();
         Bundle args = new Bundle();
@@ -82,12 +62,6 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-    private void initialize(Context context, UUID uuid) {
-        this.context = context;
-        this.uuid = uuid;
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,14 +71,8 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
         }
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBluetoothAdapter.startDiscovery();
-        Log.d("Discovery", Boolean.toString(mBluetoothAdapter.isDiscovering()));
-        Log.d("Nombre", "dsfsdfs!");
-        Log.d("Discovery", Boolean.toString(mBluetoothAdapter.isDiscovering()));
-
 
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -120,9 +88,8 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
         recyclerView.setAdapter(new MyBluetoothDevicesRecyclerViewAdapter(mDeviceList, context));
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         mDeviceList.clear();
-
+        Toast.makeText(getActivity().getApplicationContext(), "Recherche des appareils en cours...", Toast.LENGTH_LONG).show();
         if (pairedDevices.size() > 0) {
-            // There are paired devices. Get the name and address of each paired device.
             for (BluetoothDevice device : pairedDevices) {
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
@@ -137,16 +104,10 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
         mReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
-                Log.d("Nombre", "dsfsdfs!");
-
                 //Finding devices
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                    // Get the BluetoothDevice object from the Intent
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    // Add the name and address to an array adapter to show in a ListView
                     mDeviceList.add(new BluetoothDevices(device.getName(), device.getAddress()));
-                    //new ConnectThread(device, true).start();
-                    mDevice = device;
 
                 }
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -163,7 +124,7 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
                 try{
                     Log.d("Update", "Update de la liste des appareils");
                     mDeviceList.clear();
-                    Toast.makeText(getActivity().getApplicationContext(), "Mise a jour de la liste, veuillez patienter", Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity().getApplicationContext(), "Mise a jour de la liste, veuillez patienter", Toast.LENGTH_LONG).show();
                     Log.d("Nombre appareils", Integer.toString(mDeviceList.size()));
                     lookforNonPairedDevices();
                     lookForPairedDevices();
@@ -171,7 +132,7 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
                 }
                 catch(Exception e){
                     Log.d("Probleme update", "update a echouer");
-                    Toast.makeText(getActivity().getApplicationContext(), "Impossible de mettre a jour la liste, veuillez reessayer", Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity().getApplicationContext(), "Impossible de mettre a jour la liste, veuillez reessayer", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -222,9 +183,7 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
-
     }
-
     @Override
     public void onDetach () {
         super.onDetach();

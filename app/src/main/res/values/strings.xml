@@ -3,7 +3,7 @@
     <string name="bottom_menu_choose">Choisir</string>
     <string name="bottom_menu_properties">Propriétés</string>
     <string name="bottom_menu_connection">Connexion</string>
-    <string name="bottom_menu_connexion_choix">Souhaitez-vous être l'hôte ou l'invité?</string>
+    <string name="bottom_menu_connexion_choix">Souhaitez-vous être l\'hôte ou l\'invité?</string>
     <string name="bottom_menu_play">Lire</string>
 
     <!-- TODO: Remove or change this placeholder text -->
