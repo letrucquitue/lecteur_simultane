@@ -7,15 +7,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Meh on 2018-04-25.
+ * Classe assez simple qui gère des appareils. Chaque fois qu'on trouve un appareil proche, on crée un objet pour cet appareil
+ * Effectue des actions semblabes à BluetoothDevice fourni par Android mais beaucoup plus simple
  */
 
 public class BluetoothDevices {
     private String mNom;
     private String mAdresse;
-    public static final List<BluetoothDevices.BluetoothItem> ITEMS = new ArrayList<>();
-    public static final Map<String, BluetoothItem> ITEM_MAP = new HashMap<String, BluetoothItem>();
-    public static final ArrayList<BluetoothDevices> bluetoothsDevices = new ArrayList<>();
+    public static final List<BluetoothDevices.BluetoothItem> ITEMS = new ArrayList<>();  //Simplement pour les adapter
+    public static final Map<String, BluetoothItem> ITEM_MAP = new HashMap<String, BluetoothItem>(); //Simplement pour les adapters
+    public static final ArrayList<BluetoothDevices> bluetoothsDevices = new ArrayList<>(); //Liste de tous les appareils, pairés ou non.
 
     public BluetoothDevices(String pNom, String pAdresse){
         this.mNom = pNom;
@@ -29,6 +30,10 @@ public class BluetoothDevices {
     public String getAdresse(){
         return mAdresse;
     }
+
+
+    //Début de la classe pour les adapteurs
+
     public static class BluetoothItem {
         public final String id;
         public final String content;
@@ -46,7 +51,6 @@ public class BluetoothDevices {
         }
 
         private static BluetoothItem createItem(int position, String marque) throws IOException {
-
             return new BluetoothItem(String.valueOf(position), marque, marque);
         }
 

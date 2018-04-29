@@ -31,6 +31,9 @@ import ca.ulaval.ima.mp.adapter.MyBluetoothDevicesRecyclerViewAdapter;
 import ca.ulaval.ima.mp.adapter.MyHoteDevicesInvitesRecyclerViewAdapter;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
 
+/**
+ * Classe qui trouve les invités et accepte leurs demandes
+ */
 
 public class HoteFragment extends android.app.Fragment {
 
@@ -193,6 +196,12 @@ public class HoteFragment extends android.app.Fragment {
         super.onDestroy();
     }
 
+
+    /**
+     * Créer des sockets pour accepter les clients
+     * Impossible a tester seul donc peut ne pas fonctionner
+     * @param device
+     */
     public  void connectClient(BluetoothDevices device){
         new AcceptThread().run();
     }

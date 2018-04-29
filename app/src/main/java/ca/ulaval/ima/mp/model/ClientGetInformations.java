@@ -1,7 +1,7 @@
 package ca.ulaval.ima.mp.model;
 
-/**
- * Created by Meh on 2018-04-28.
+/*
+On fait le traitements sur les vidéos ici. Le host envoie les informations par la classe HostSendInformation et le client les recoit ici.
  */
 
 public class ClientGetInformations {
@@ -15,13 +15,26 @@ public class ClientGetInformations {
         this.mHostAccepted = accepted;
     }
 
-    public boolean HostAcceptedInvitation(){
-        //TODO : Retourne true ou false si lhost refuse linvitation
-        return mHostAccepted;
+    //Retourne true ou false si lhost refuse linvitation
+    public boolean HostAcceptedInvitation(boolean accepted){
+        return mHostAccepted = accepted;
     }
 
-    public void syncVideo(String timeStamp){
+    //A chaque intervalle, l'host envoie le timeStamp du video. On set ce temps pour chaque client.
+    public void syncVideo(int timeStamp){
         //TODO : Set le video a ce timeStamp;
+    }
+
+    public void stopVideo(){
+        //TODO : L'host demande de mettre en pause la vidéo
+    }
+
+    public void startVideo(){
+        //TODO : L'host demande de démarrer la vidéo.
+    }
+
+    public void changeVideo(VideoModel video){
+        //TODO : Set le nouveau vidéo a jouer
     }
 
 }

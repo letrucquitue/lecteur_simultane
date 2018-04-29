@@ -31,18 +31,12 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
+ * On trouve ici les appareils hotes. On peut ensuite se connecter à eux.
  */
+
 public class BluetoothDevicesFragment extends android.app.Fragment {
 
-    private Activity activity;
-    private Context context;
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
@@ -50,22 +44,11 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
     private BluetoothAdapter mBluetoothAdapter;
     private BroadcastReceiver mReceiver;
     private MyBluetoothDevicesRecyclerViewAdapter mAdapter;
-
     private Button mButtonUpdate;
     private Button mButtonDecouvrable;
-
-
     private UUID mUUID =  UUID.fromString("ff85d43d-7f0c-4aa8-a89f-c102ec9993db");
 
     public BluetoothDevicesFragment() {
-    }
-
-    public static BluetoothDevicesFragment newInstance(int columnCount) {
-        BluetoothDevicesFragment fragment = new BluetoothDevicesFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -84,6 +67,8 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bluetoothdevices_list, container, false);
         Context context = view.getContext();
+
+        //Prepare notre liste
         recyclerView = view.findViewById(R.id.list);
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -91,6 +76,8 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
         recyclerView.setAdapter(new MyBluetoothDevicesRecyclerViewAdapter(mDeviceList, context));
+
+        //On trouve les appareils déja pairés
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         mDeviceList.clear();
         Toast.makeText(getActivity().getApplicationContext(), "Recherche des appareils en cours...", Toast.LENGTH_LONG).show();
@@ -100,12 +87,14 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
                 String deviceHardwareAddress = device.getAddress(); // MAC address
                 Log.d(deviceName, deviceHardwareAddress);
                 mDeviceList.add(new BluetoothDevices(deviceName,deviceHardwareAddress));
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-                MyBluetoothDevicesRecyclerViewAdapter adapter = new MyBluetoothDevicesRecyclerViewAdapter( mDeviceList, getActivity().getApplicationContext());
-                recyclerView.setAdapter(adapter);
-                Log.d("Nombre déja pairée", Integer.toString(mDeviceList.size()));
             }
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+            MyBluetoothDevicesRecyclerViewAdapter adapter = new MyBluetoothDevicesRecyclerViewAdapter( mDeviceList, getActivity().getApplicationContext());
+            recyclerView.setAdapter(adapter);
+            Log.d("Nombre déja pairée", Integer.toString(mDeviceList.size()));
         }
+
+        //On trouve les appareils non pairés
         mReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
@@ -122,6 +111,8 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
 
             }
         };
+
+        //On recherche à nouveau des appareils
         mButtonUpdate = view.findViewById(R.id.btnUpdate);
         mButtonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +132,7 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
             }
         });
 
+        //Se montre découvrable(Probablement inutile pour les invités, on supprimera au besoin
         mButtonDecouvrable = view.findViewById(R.id.btnDecouvert);
         mButtonDecouvrable.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,20 +149,19 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
                 }
             }
         });
-
-        Log.d("Discovery", "lol");
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         getActivity().registerReceiver(mReceiver, filter);
-        Log.d("Nombre", "Entre23sdsd3!");
         return view;
     }
 
 
+    //Cherche les appareils pairés
     private void lookForPairedDevices(){
         Log.d("Update", "Update de la liste des appareils connectes");
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
     }
 
+    //Cherche les appareils non-pairés
     private void lookforNonPairedDevices(){
         Log.d("Update", "Update de la liste des appareils non connectes");
         mBluetoothAdapter.startDiscovery();
@@ -224,6 +215,9 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
         }
 
     }
+    /*
+    Crée un thread pour créer des connections a des sockets avec les hotes
+     */
 
     public class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
