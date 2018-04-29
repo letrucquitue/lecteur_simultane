@@ -43,9 +43,9 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
     private ArrayList<BluetoothDevices> mDeviceList = new ArrayList<BluetoothDevices>();
     private BluetoothAdapter mBluetoothAdapter;
     private BroadcastReceiver mReceiver;
-    private MyBluetoothDevicesRecyclerViewAdapter mAdapter;
     private Button mButtonUpdate;
     private Button mButtonDecouvrable;
+    private MyBluetoothDevicesRecyclerViewAdapter mAdapter;
     private UUID mUUID =  UUID.fromString("ff85d43d-7f0c-4aa8-a89f-c102ec9993db");
 
     public BluetoothDevicesFragment() {
@@ -75,24 +75,16 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        /*
         recyclerView.setAdapter(new MyBluetoothDevicesRecyclerViewAdapter(mDeviceList, context));
+        */
+        mAdapter = new MyBluetoothDevicesRecyclerViewAdapter(mDeviceList, getActivity().getApplicationContext());
+        recyclerView.setAdapter(mAdapter);
+        Toast.makeText(getActivity().getApplicationContext(), "Recherche des appareils en cours...", Toast.LENGTH_LONG).show();
 
         //On trouve les appareils déja pairés
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         mDeviceList.clear();
-        Toast.makeText(getActivity().getApplicationContext(), "Recherche des appareils en cours...", Toast.LENGTH_LONG).show();
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                String deviceName = device.getName();
-                String deviceHardwareAddress = device.getAddress(); // MAC address
-                Log.d(deviceName, deviceHardwareAddress);
-                mDeviceList.add(new BluetoothDevices(deviceName,deviceHardwareAddress));
-            }
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-            MyBluetoothDevicesRecyclerViewAdapter adapter = new MyBluetoothDevicesRecyclerViewAdapter( mDeviceList, getActivity().getApplicationContext());
-            recyclerView.setAdapter(adapter);
-            Log.d("Nombre déja pairée", Integer.toString(mDeviceList.size()));
-        }
+        lookForPairedDevices();
 
         //On trouve les appareils non pairés
         mReceiver = new BroadcastReceiver() {
@@ -102,13 +94,8 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     mDeviceList.add(new BluetoothDevices(device.getName(), device.getAddress()));
-
                 }
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                mAdapter = new MyBluetoothDevicesRecyclerViewAdapter(mDeviceList, context);
-                recyclerView.setAdapter(mAdapter);
-                Log.d("Nombre de connections", Integer.toString(mDeviceList.size()));
-
+                mAdapter.notifyDataSetChanged();
             }
         };
 
@@ -121,10 +108,8 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
                     Log.d("Update", "Update de la liste des appareils");
                     mDeviceList.clear();
                     Toast.makeText(getActivity().getApplicationContext(), "Mise a jour de la liste, veuillez patienter", Toast.LENGTH_LONG).show();
-                    Log.d("Nombre appareils", Integer.toString(mDeviceList.size()));
                     lookforNonPairedDevices();
                     lookForPairedDevices();
-                    mAdapter.notifyDataSetChanged();
                 }
                 catch(Exception e){
                     Log.d("Probleme update", "update a echouer");
@@ -155,10 +140,18 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
     }
 
 
+
     //Cherche les appareils pairés
     private void lookForPairedDevices(){
         Log.d("Update", "Update de la liste des appareils connectes");
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        for (BluetoothDevice device : pairedDevices) {
+            String deviceName = device.getName();
+            String deviceHardwareAddress = device.getAddress(); // MAC address
+            Log.d(deviceName, deviceHardwareAddress);
+            mDeviceList.add(new BluetoothDevices(deviceName,deviceHardwareAddress));
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     //Cherche les appareils non-pairés
