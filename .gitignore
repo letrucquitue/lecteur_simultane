@@ -34,3 +34,6 @@ captures/
 # vcs and workspace xml
 .idea/vcs.xml
 .idea/workspace.xml
+app/app\.iml
+
+\.idea/libraries/__local_aars___C__Users_LEOBL_Documents_appli_mobile_projet_appli_app_libs_YouTubeAndroidPlayerApi_jar_unspecified_jar\.xml
