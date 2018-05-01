@@ -9,4 +9,5 @@ import ca.ulaval.ima.mp.model.VideoModel;
 
 public interface OnItemClickListener {
     void onItemClick(VideoModel item);
+    void onItemClick(String item);
 }

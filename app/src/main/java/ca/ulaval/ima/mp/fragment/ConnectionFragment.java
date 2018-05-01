@@ -5,10 +5,16 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 import ca.ulaval.ima.mp.R;
 import ca.ulaval.ima.mp.model.SelfUser;
@@ -18,6 +24,7 @@ import ca.ulaval.ima.mp.model.SelfUser;
  */
 
 public class ConnectionFragment extends Fragment{
+    private Button become_host_btn,join_host_btn;
 
     private Button btnInviteNotPair;
     private Button btnHote;
@@ -60,5 +67,26 @@ public class ConnectionFragment extends Fragment{
             }
         });
         return view;
+    }
+
+    private class BecomeHost implements View.OnClickListener{
+        public void onClick(View v){
+            //launch Socket BT
+            Fragment fragment = new ConnectionFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("mode", "host");
+            fragment.setArguments(bundle);
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.main_content, fragment).commit();
+        }
+    }
+
+    private class JoinHost implements View.OnClickListener{
+        public void onClick(View v){
+            //join
+            Fragment fragment = new ClientFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.main_content, fragment).commit();
+        }
     }
 }

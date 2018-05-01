@@ -1,15 +1,23 @@
 package ca.ulaval.ima.mp.fragment;
 
+import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -36,20 +44,24 @@ import ca.ulaval.ima.mp.model.VideoModel;
 public class ChooseVideoFragment extends Fragment {
 
     private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyBfdzOTVomBllyKzi3GROReQFtO9PrYGLs";
-    //private static String KEYWORD_TO_SEARCH = "AH";
-    //private static String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + KEYWORD_TO_SEARCH + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY + "";
-    private static String PLAYLIST_ID = "PLFsQleAWXsj_4yDeebiIADdH5FMayBiJo";//here you should use your playlist id for testing purpose you can use this api also
-    private static String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=" + PLAYLIST_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY + "";
+    private static String CHANNEL_GET_URL_BEFORE_KEYWORDS = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=";
+    private static String CHANNEL_GET_URL_AFTER_KEYWORDS = "&type=video&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
+    private static String VIDEO_DETAILS_GET_URL = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&key="+GOOGLE_YOUTUBE_API_KEY+"&id=";
+    //private static String PLAYLIST_ID = "PLFsQleAWXsj_4yDeebiIADdH5FMayBiJo";//here you should use your playlist id for testing purpose you can use this api also
+    //private static String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=" + PLAYLIST_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY + "";
 
+    private EditText search;
     private RecyclerView mList_videos = null;
     private VideoListAdapter adapter = null;
     private ArrayList<VideoModel> mListData = new ArrayList<>();
+    private String keywords_to_search = "Denis Brogniart AH";
 
     public ChooseVideoFragment() {
         // Required empty public constructor
     }
 
 
+    //A la creation de la vue
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,26 +70,101 @@ public class ChooseVideoFragment extends Fragment {
         mList_videos = (RecyclerView) view.findViewById(R.id.mList_videos);
         initList(mListData);
         new RequestYoutubeAPI().execute();
+
+        //Gestion du champ "Rechercher"
+        search = (EditText) view.findViewById(R.id.search_field);
+        //Récupérer l'état sauvegardé
+        if (savedInstanceState != null) {
+            Log.e("Bundle : ","Restoring");
+            String saved_keywords = savedInstanceState.getString("saved_keywords");
+            if(saved_keywords != "" && saved_keywords != null){
+                search.setText(saved_keywords);
+            }
+        }
+        //search event
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    //hide keyboard
+                    View view = getActivity().getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    //actualize list
+                    actualizeList(search.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
+        //enter key event (pour simulation sur ordinateur)
+        search.setOnKeyListener(new View.OnKeyListener()
+        {
+            public boolean onKey(View v, int keyCode, KeyEvent event)
+            {
+                if (event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    switch (keyCode)
+                    {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+                            actualizeList(search.getText().toString());
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
+
         return view;
     }
 
-
+    //Initialisation de la liste de videos affichees dans l'onglet "Choisir"
     private void initList(ArrayList<VideoModel> mListData) {
         mList_videos.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //Adapter qui va gerer le clic sur un element
         adapter = new VideoListAdapter(getActivity(), mListData, new OnItemClickListener() {
             @Override
             public void onItemClick(VideoModel item) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                //maj du bottom navigation view
+                BottomNavigationView nav = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
+                nav.setSelectedItemId(R.id.navigation_properties);
+
+                //go to properties fragment with video id parameter
+                PropertiesFragment fragment = new PropertiesFragment();
+                Bundle arguments = new Bundle();
+                arguments.putString( "video_id" , item.getId());
+                fragment.setArguments(arguments);
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.main_content, fragment , "fragment_properties");
+                ft.commit();
+
+                /*Intent intent = new Intent(getActivity(), MainActivity.class);
                 intent.putExtra(VideoModel.class.toString(), item);
-                startActivity(intent);
+                startActivity(intent);*/
+            }
+
+            @Override
+            public void onItemClick(String item) {
+                //USELESS (A REVOIR)
             }
         });
         mList_videos.setAdapter(adapter);
 
     }
 
+    //Apres avoir recherche un mot
+    private void actualizeList(String keywords){
+        this.keywords_to_search = keywords;
+        initList(mListData);
+        new RequestYoutubeAPI().execute();
+    }
 
-    //create an asynctask to get all the data from youtube
+    //Asynctask qui recupere les donnees de l'API Youtube Data V3
     private class RequestYoutubeAPI extends AsyncTask<Void, String, String> {
         @Override
         protected void onPreExecute() {
@@ -87,8 +174,17 @@ public class ChooseVideoFragment extends Fragment {
         @Override
         protected String doInBackground(Void... params) {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(CHANNEL_GET_URL);
-            Log.e("URL", CHANNEL_GET_URL);
+            //Definir la liste de mots cles
+            String[] keywords = keywords_to_search.split(" ");
+            //Definir l'URL du GET par rapport aux mots cles
+            String url = CHANNEL_GET_URL_BEFORE_KEYWORDS;
+            for (int i=0;i<keywords.length;i++){
+                url += keywords[i]+"+";
+            }
+            url += CHANNEL_GET_URL_AFTER_KEYWORDS;
+
+            HttpGet httpGet = new HttpGet(url);
+            Log.e("URL", url);
             try {
                 HttpResponse response = httpClient.execute(httpGet);
                 HttpEntity httpEntity = response.getEntity();
@@ -118,6 +214,7 @@ public class ChooseVideoFragment extends Fragment {
         }
     }
 
+    //Fonction qui permet de recuperer la liste de videos obtenues a l aide du GET sur l'API Youtube Data V3
     public ArrayList<VideoModel> parseVideoListFromResponse(JSONObject jsonObject) {
         ArrayList<VideoModel> mList = new ArrayList<>();
 
@@ -127,14 +224,13 @@ public class ChooseVideoFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject json = jsonArray.getJSONObject(i);
                     if (json.has("kind")) {
-                        if (json.getString("kind").equals("youtube#playlistItem")) {
+                        if (json.getString("kind").equals("youtube#searchResult")) {
                             VideoModel youtubeObject = new VideoModel();
                             JSONObject jsonSnippet = json.getJSONObject("snippet");
-                            String video_id = "";
-                            if (jsonSnippet.has("resourceId")) {
-                                JSONObject jsonResource = jsonSnippet.getJSONObject("resourceId");
-                                video_id = jsonResource.getString("videoId");
-
+                            JSONObject jsonId = json.getJSONObject("id");
+                            String video_id = "undefined";
+                            if (jsonId.has("videoId")) {
+                                video_id = jsonId.getString("videoId");
                             }
                             String title = jsonSnippet.getString("title");
                             String description = jsonSnippet.getString("description");
@@ -146,6 +242,29 @@ public class ChooseVideoFragment extends Fragment {
                             youtubeObject.setPublishedAt(publishedAt);
                             youtubeObject.setThumbnail(thumbnail);
                             youtubeObject.setId(video_id);
+
+                            //get duration of the video
+                            //with another GET
+                            /*HttpClient httpClient = new DefaultHttpClient();
+                            String url = VIDEO_DETAILS_GET_URL+video_id;
+                            HttpGet httpGet = new HttpGet(url);
+                            Log.e("URL", url);
+                            try {
+                                HttpResponse response = httpClient.execute(httpGet);
+                                HttpEntity httpEntity = response.getEntity();
+                                String json_details = EntityUtils.toString(httpEntity);
+                                jsonObject = new JSONObject(json_details);
+                                jsonArray = jsonObject.getJSONArray("items");
+                                json = jsonArray.getJSONObject(0);
+                                JSONObject jsonContentDetails = json.getJSONObject("contentDetails");
+                                String duration = jsonContentDetails.getString("duration");
+                                Log.e("Duration : ", duration);
+                                youtubeObject.setDuration("duration");
+                            } catch (IOException e) {
+                                Log.e("OMG","OMG");
+                                e.printStackTrace();
+                            }*/
+
                             mList.add(youtubeObject);
 
                         }
@@ -160,6 +279,14 @@ public class ChooseVideoFragment extends Fragment {
 
         return mList;
 
+    }
+
+    //sauvegarde de l'état
+    @Override
+    public void onSaveInstanceState(Bundle saved_bundle) {
+        super.onSaveInstanceState(saved_bundle);
+        saved_bundle.putString("saved_keywords", search.getText().toString());
+        Log.e("Saving state : ","Done with "+saved_bundle.getString("saved_keywords"));
     }
 
 

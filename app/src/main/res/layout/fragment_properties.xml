@@ -4,9 +4,56 @@
     android:layout_height="match_parent"
     tools:context="ca.ulaval.ima.mp.fragment.PropertiesFragment">
 
-    <TextView
-        android:id="@+id/properties_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/bottom_menu_properties" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/properties_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/title_fragment"
+            android:text="@string/bottom_menu_properties" />
+        <TextView
+            android:id="@+id/video_id_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/title_properties"
+            android:text="Vidéo ID (www.youtube.com/watch?v=)" />
+        <EditText
+            android:id="@+id/video_id_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Insérez ID..." />
+        <TextView
+            android:id="@+id/countdown_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/title_properties"
+            android:text="Minuteur (0 à 5 secondes)" />
+
+        <SeekBar
+            android:id="@+id/countdown_bar"
+            style="@style/countdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:min="0"
+            android:max="5"
+            android:progress="1"/>
+
+        <TextView
+            android:id="@+id/timeline_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/title_properties"
+            android:text="Timeline" />
+
+        <SeekBar
+            android:id="@+id/timeline_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:min="0"
+            android:max="200"/>
+    </LinearLayout>
 </FrameLayout>
