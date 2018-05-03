@@ -1,7 +1,10 @@
 package ca.ulaval.ima.mp.fragment;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +26,12 @@ public class PropertiesFragment extends Fragment{
     private EditText video_id_field;
     private SeekBar countdown_bar,timeline_bar;
 
+    public PropertiesFragment() {
+        super();
+        //empty arguments
+        setArguments(new Bundle());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -30,12 +39,21 @@ public class PropertiesFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_properties, container, false);
 
-        //VIDEO ID FIELD
-        video_id_field = (EditText) view.findViewById(R.id.video_id_field);
+        //VIDEO ID FROM
+        /*video_id_field = (EditText) view.findViewById(R.id.video_id_field);
         if(getArguments() != null) {
             Bundle arguments = getArguments();
             video_id_field.setText(arguments.getString("video_id"));
-        }
+        }*/
+
+        //VIDEO ID FROM PREFERENCES
+        video_id_field = (EditText) view.findViewById(R.id.video_id_field);
+        Context context = getActivity().getApplicationContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String video_id = prefs.getString("video_id", "");
+        video_id_field.setText(video_id);
+
+        Log.e("Properties video_id : ",video_id);
 
         //COUNTDOWN BAR
         countdown_bar = (SeekBar) view.findViewById(R.id.countdown_bar);
@@ -61,5 +79,16 @@ public class PropertiesFragment extends Fragment{
         timeline_bar= (SeekBar) view.findViewById(R.id.timeline_bar);
 
         return view;
+    }
+
+    public void onHiddenChanged(boolean hidden) {
+        //onShow
+        if(hidden == false){
+            video_id_field = (EditText) this.getView().findViewById(R.id.video_id_field);
+            Context context = getActivity().getApplicationContext();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            String video_id = prefs.getString("video_id", "");
+            video_id_field.setText(video_id);
+        }
     }
 }

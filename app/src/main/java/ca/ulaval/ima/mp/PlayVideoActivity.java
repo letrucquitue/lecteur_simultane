@@ -2,7 +2,10 @@ package ca.ulaval.ima.mp;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +38,11 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
         onInitializedListener = new YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-                youTubePlayer.loadVideo("Ri7GzCUTC5s");
+                //VIDEO ID FROM PREFERENCES
+                Context context = getApplicationContext();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                String video_id = prefs.getString("video_id", "Ri7GzCUTC5s");
+                youTubePlayer.loadVideo(video_id);
             }
 
             @Override
