@@ -3,9 +3,14 @@ package ca.ulaval.ima.mp;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,7 +31,7 @@ import ca.ulaval.ima.mp.model.BluetoothDevices;
 import ca.ulaval.ima.mp.model.SelfUser;
 import ca.ulaval.ima.mp.service.BluetoothService;
 
-public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener, BluetoothService.ServiceCallbacks {
 
     private BottomNavigationView navigation;
     private ArrayList<Fragment> fragments;
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
     private Fragment properties_fragment;
     private Fragment connection_fragment;
     private Fragment play_fragment;
+    private BluetoothService myService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
                 .replace(R.id.main_content, current_fragment)
                 .commit();
 
+        registerReceiver(broadcastReceiver, new IntentFilter(
+                BluetoothService.BROADCAST_ACTION));
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -135,6 +143,13 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
     public void onListFragmentInteraction(BluetoothDevices.BluetoothItem item) {
 
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+    };
 
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name

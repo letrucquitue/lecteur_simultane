@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -27,9 +28,9 @@ public class BluetoothService extends Service {
     final int handlerState = 0;                        //used to identify handler message
     Handler bluetoothIn;
     private BluetoothAdapter btAdapter = null;
-
     private ConnectingThread mConnectingThread;
     private ConnectedThread mConnectedThread;
+    private String BROADCAST_ACTION = "com.mukesh.service";
 
     private boolean stopThread;
     // SPP UUID service - this should work for most devices
@@ -39,6 +40,18 @@ public class BluetoothService extends Service {
 
     private StringBuilder recDataString = new StringBuilder();
 
+    private final IBinder binder = new LocalBinder();
+    // Registered callbacks
+    private ServiceCallbacks serviceCallbacks;
+
+
+    // Class used for the client Binder.
+    public class LocalBinder extends Binder {
+        BluetoothService getService() {
+            // Return this instance of MyService so clients can call public methods
+            return BluetoothService.this;
+        }
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -46,6 +59,10 @@ public class BluetoothService extends Service {
         if (!SelfUser.getIsHost())
             MAC_ADDRESS = SelfUser.getHostAdress();
         stopThread = false;
+    }
+
+    public void setCallbacks(ServiceCallbacks callbacks) {
+        serviceCallbacks = callbacks;
     }
 
     @Override
@@ -64,8 +81,8 @@ public class BluetoothService extends Service {
                         Intent myIntent = new Intent(getBaseContext(), PlayVideoActivity.class);
                         myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(myIntent);
-
                     }
+
                 }
                 recDataString.delete(0, recDataString.length());                    //clear all string data
             }
@@ -90,10 +107,9 @@ public class BluetoothService extends Service {
         Log.d("SERVICE", "onDestroy");
     }
 
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return binder;
     }
 
     //Checks that the Android device Bluetooth is available and prompts to be turned on if off
@@ -279,5 +295,9 @@ public class BluetoothService extends Service {
                 stopSelf();
             }
         }
+    }
+
+    public interface ServiceCallbacks {
+        void doSomething();
     }
 }

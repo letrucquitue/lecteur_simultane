@@ -65,4 +65,8 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
         }
     }
 
+    public void loadVideo(){
+
+    }
+
 }
