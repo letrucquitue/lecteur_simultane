@@ -43,7 +43,7 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
         //IF CLIENT
         Intent intent = getIntent();
         String video_id = intent.getStringExtra("video_id");
-        if(video_id.equals("") == false && video_id != null){
+        if(video_id != null){
             Context context = getApplicationContext();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor=prefs.edit();
@@ -70,6 +70,10 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
 
         youtube_player_view.initialize(GOOGLE_YOUTUBE_API_KEY,onInitializedListener);
         try {
+            //VIDEO ID FROM PREFERENCES
+            Context context = getApplicationContext();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            video_id = prefs.getString("video_id", "Ri7GzCUTC5s");
             SelfUser.mmOutStream.write(video_id.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
