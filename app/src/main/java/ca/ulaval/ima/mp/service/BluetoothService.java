@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
+import ca.ulaval.ima.mp.model.SelfUser;
+
 /**
  * Created by LEOBL on 22/04/2018.
  */
@@ -30,9 +32,9 @@ public class BluetoothService extends Service {
 
     private boolean stopThread;
     // SPP UUID service - this should work for most devices
-    private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private static final UUID BTMODULEUUID = UUID.fromString("ff85d43d-7f0c-4aa8-a89f-c102ec9993db");
     // String for MAC address
-    private static final String MAC_ADDRESS = "YOUR:MAC:ADDRESS:HERE";
+    private static final String MAC_ADDRESS = SelfUser.getHostAdress();
 
     private StringBuilder recDataString = new StringBuilder();
 
@@ -108,6 +110,10 @@ public class BluetoothService extends Service {
                 stopSelf();
             }
         }
+    }
+
+    public void CreateConnectingThread(BluetoothDevice device){
+        new ConnectingThread(device);
     }
 
     // New Class for Connecting Thread

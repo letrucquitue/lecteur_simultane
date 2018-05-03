@@ -1,8 +1,11 @@
 package ca.ulaval.ima.mp.model;
 
+import android.content.Intent;
 import android.util.Log;
 
 import java.util.ArrayList;
+
+import ca.ulaval.ima.mp.service.BluetoothService;
 
 /**
  * Classe qui gère l'utilisateur courant. Les autres users sont considérés comme des devices et non des users
@@ -20,6 +23,7 @@ public class SelfUser {
     public static boolean mIsHost; //Si on est un host a ce moment ou un invité. On peut switcher entre les deux à tout moment
     public static ArrayList<BluetoothDevices> mConnectedDevices; //Les appareils connetés à nous (Si hote)
     public static VideoModel mVideo; //La vidéo courante
+    public static Intent mService;
 
     SelfUser(){
         mIsHost = false;
@@ -35,6 +39,9 @@ public class SelfUser {
     }
     public static boolean getIsHost(){
         return mIsHost;
+    }
+    public static String getHostAdress(){
+        return getHost().getAdresse();
     }
 
     public static void setVideo(VideoModel pVideo){

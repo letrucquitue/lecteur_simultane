@@ -152,6 +152,7 @@ public class HoteFragment extends android.app.Fragment {
                 }
             }
         });
+        new AcceptThread();
         return view;
     }
 
@@ -215,6 +216,7 @@ public class HoteFragment extends android.app.Fragment {
             BluetoothServerSocket tmp = null;
             try {
                 tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("Lecteur simultané", mUUID);
+                Log.e("Erreur fonctionne", "Socket's accept() method failed");
             } catch (IOException e) {
                 Log.e("Erreur serveur", "Socket's listen() method failed", e);
             }
