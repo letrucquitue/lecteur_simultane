@@ -89,7 +89,7 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
             video_id = prefs.getString("video_id", "Ri7GzCUTC5s");
             String msg = "video:"+video_id;
             SelfUser.mmOutStream.write(msg.getBytes());;
-            SelfUser.mmOutStream.write(mPlayer.getCurrentTimeMillis());
+            new ConnectingThread().start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -107,8 +107,7 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
     private class ConnectingThread extends Thread {
         private YouTubePlayer mPlayerThread;
 
-        public ConnectingThread(YouTubePlayer player) {
-            mPlayerThread = player;
+        public ConnectingThread(){
         }
 
         @Override
