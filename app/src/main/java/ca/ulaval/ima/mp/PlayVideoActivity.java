@@ -2,6 +2,8 @@ package ca.ulaval.ima.mp;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,16 +30,18 @@ import ca.ulaval.ima.mp.fragment.PlayFragment;
 import ca.ulaval.ima.mp.fragment.PropertiesFragment;
 import ca.ulaval.ima.mp.model.HostSendInformations;
 import ca.ulaval.ima.mp.model.SelfUser;
+import ca.ulaval.ima.mp.service.BluetoothService;
 
 public class PlayVideoActivity extends YouTubeBaseActivity {
 
-    private static final String BROADCAST_ACTION = "0";
+    public static final String BROADCAST_ACTION = "0";
     private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyBfdzOTVomBllyKzi3GROReQFtO9PrYGLs";
 
     private YouTubePlayerView youtube_player_view;
     private BroadcastReceiver myBroadCastReceiver;
     private YouTubePlayer.OnInitializedListener onInitializedListener;
     private String video_id = "Ri7GzCUTC5s";
+    public YouTubePlayer mPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +71,14 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                 String video_id = prefs.getString("video_id", "Ri7GzCUTC5s");
                 youTubePlayer.loadVideo(video_id);
+                mPlayer = youTubePlayer;
             }
 
             @Override
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
                 Log.e("FAIL","C est casse");
             }
+
         };
 
         youtube_player_view.initialize(GOOGLE_YOUTUBE_API_KEY,onInitializedListener);
@@ -82,7 +88,8 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             video_id = prefs.getString("video_id", "Ri7GzCUTC5s");
             String msg = "video:"+video_id;
-            SelfUser.mmOutStream.write(msg.getBytes());
+            SelfUser.mmOutStream.write(msg.getBytes());;
+            SelfUser.mmOutStream.write(mPlayer.getCurrentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,5 +103,24 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
 
         }
     };
+
+    private class ConnectingThread extends Thread {
+        private YouTubePlayer mPlayerThread;
+
+        public ConnectingThread(YouTubePlayer player) {
+            mPlayerThread = player;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            String str = "time:" + Integer.toString(mPlayer.getCurrentTimeMillis());
+            try {
+                SelfUser.mmOutStream.write(str.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

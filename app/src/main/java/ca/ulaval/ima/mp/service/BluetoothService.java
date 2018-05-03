@@ -68,6 +68,8 @@ public class BluetoothService extends Service {
                         myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         myIntent.putExtra("video_id",video_id);
                         startActivity(myIntent);
+                        Intent broadCastIntent = new Intent();
+                        broadCastIntent.setAction(PlayVideoActivity.BROADCAST_ACTION);
                     }
                     Intent intent = new Intent();
                     sendBroadcast(intent);
@@ -75,6 +77,10 @@ public class BluetoothService extends Service {
                 recDataString.delete(0, recDataString.length());                    //clear all string data
             }
         };
+
+
+        // uncomment this line if you want to send data
+//            broadCastIntent.putExtra("data", "abc");
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();       // get Bluetooth adapter
         checkBTState();
