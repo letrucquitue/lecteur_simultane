@@ -89,6 +89,12 @@ public class BluetoothService extends Service {
 
     //Checks that the Android device Bluetooth is available and prompts to be turned on if off
     private void checkBTState() {
+        if (SelfUser.getIsHost()){
+            new ConnectedThread(SelfUser.mSocket);
+        }
+        else{
+
+
         if (btAdapter == null) {
         Log.d("BT SERVICE", "BLUETOOTH NOT SUPPORTED BY DEVICE, STOPPING SERVICE");
         stopSelf();
@@ -109,6 +115,7 @@ public class BluetoothService extends Service {
                 Log.d("BT SERVICE", "BLUETOOTH NOT ON, STOPPING SERVICE");
                 stopSelf();
             }
+        }
         }
     }
 
@@ -209,6 +216,11 @@ public class BluetoothService extends Service {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+            SelfUser.mmOutStream = tmpOut;
+            SelfUser.mmInStream = tmpIn;
+            write("lol");
+            Log.d("DEBUG BT", tmpIn.toString());
+            Log.d("BT SERVICE", tmpOut.toString());
         }
 
         public void run() {
