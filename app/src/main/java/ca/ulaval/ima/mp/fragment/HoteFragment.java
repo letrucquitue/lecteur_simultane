@@ -154,7 +154,7 @@ public class HoteFragment extends android.app.Fragment {
                 }
             }
         });
-        new AcceptThread();
+        new AcceptThread().start();
         return view;
     }
 
@@ -226,9 +226,11 @@ public class HoteFragment extends android.app.Fragment {
         }
 
         public void run() {
+            Log.d("Socketsdfsdf :", "ahhh");
             BluetoothSocket socket = null;
             while (true) {
                 try {
+                    Log.d("Socketsdfsdf :", "bleu");
                     socket = mmServerSocket.accept();
                     SelfUser.mSocket = socket;
                     Log.d("Socket :", socket.toString());
