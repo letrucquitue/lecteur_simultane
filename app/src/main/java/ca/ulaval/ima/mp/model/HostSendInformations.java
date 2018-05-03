@@ -10,7 +10,7 @@ Le host envoie les informations par cette classe. La liste des appareils connect
 
 public class HostSendInformations {
 
-    public void sendVideo(BluetoothDevices device) {
+    public void sendVideo() {
         String input = "lol";
         byte[] msgBuffer = input.getBytes();           //converts entered String into bytes
         try {

@@ -14,10 +14,14 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
+import java.io.IOException;
+
 import ca.ulaval.ima.mp.fragment.ChooseVideoFragment;
 import ca.ulaval.ima.mp.fragment.ConnectionFragment;
 import ca.ulaval.ima.mp.fragment.PlayFragment;
 import ca.ulaval.ima.mp.fragment.PropertiesFragment;
+import ca.ulaval.ima.mp.model.HostSendInformations;
+import ca.ulaval.ima.mp.model.SelfUser;
 
 public class PlayVideoActivity extends YouTubeBaseActivity {
 
@@ -45,7 +49,12 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
         };
 
         youtube_player_view.initialize(GOOGLE_YOUTUBE_API_KEY,onInitializedListener);
-
+        String str = "lol";
+        try {
+            SelfUser.mmOutStream.write(str.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

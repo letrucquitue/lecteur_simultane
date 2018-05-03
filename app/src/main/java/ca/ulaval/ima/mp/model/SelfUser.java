@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.util.Log;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -97,6 +98,29 @@ public class SelfUser {
             str ="Aucun appareil connectes";
         }
         Log.d("Appareils connectes", str);
+    }
+
+    public static void sendVideo(String video) {
+        String input = "lol";
+        byte[] msgBuffer = input.getBytes();           //converts entered String into bytes
+        try {
+            SelfUser.mmOutStream.write(msgBuffer);                //write bytes over BT connection via outstream
+        } catch (IOException e) {
+            //if you cannot write, close the application
+            Log.d("DEBUG BT", "UNABLE TO READ/WRITE " + e.toString());
+            Log.d("BT SERVICE", "UNABLE TO READ/WRITE, STOPPING SERVICE");
+        }
+    }
+
+    public static void receiveVideo() throws IOException {
+        while(true) {
+            try {
+                mmInStream.read();
+                Log.d("Test", "Video recue");
+            } catch (Exception e) {
+
+            }
+        }
     }
 
 
