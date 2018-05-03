@@ -69,6 +69,8 @@ public class BluetoothService extends Service {
                         myIntent.putExtra("video_id",video_id);
                         startActivity(myIntent);
                     }
+                    Intent intent = new Intent();
+                    sendBroadcast(intent);
                 }
                 recDataString.delete(0, recDataString.length());                    //clear all string data
             }

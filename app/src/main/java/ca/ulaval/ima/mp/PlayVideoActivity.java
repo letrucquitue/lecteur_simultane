@@ -2,8 +2,10 @@ package ca.ulaval.ima.mp;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -29,9 +31,11 @@ import ca.ulaval.ima.mp.model.SelfUser;
 
 public class PlayVideoActivity extends YouTubeBaseActivity {
 
+    private static final String BROADCAST_ACTION = "0";
     private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyBfdzOTVomBllyKzi3GROReQFtO9PrYGLs";
 
     private YouTubePlayerView youtube_player_view;
+    private BroadcastReceiver myBroadCastReceiver;
     private YouTubePlayer.OnInitializedListener onInitializedListener;
     private String video_id = "Ri7GzCUTC5s";
 
@@ -50,6 +54,9 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
             editor.putString("video_id", video_id);
             editor.commit();
         }
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BROADCAST_ACTION);
+        registerReceiver(myBroadCastReceiver, intentFilter);
 
         youtube_player_view = (YouTubePlayerView) findViewById(R.id.youtube_player_view);
         onInitializedListener = new YouTubePlayer.OnInitializedListener() {
@@ -80,5 +87,14 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
             e.printStackTrace();
         }
     }
+
+    class MyBroadcast extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context ctxt, Intent i) {
+
+            System.out.println("received");
+
+        }
+    };
 
 }
