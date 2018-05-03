@@ -15,6 +15,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
+import ca.ulaval.ima.mp.PlayVideoActivity;
+import ca.ulaval.ima.mp.model.SelfUser;
+
 /**
  * Created by LEOBL on 22/04/2018.
  */
@@ -30,9 +33,9 @@ public class BluetoothService extends Service {
 
     private boolean stopThread;
     // SPP UUID service - this should work for most devices
-    private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private static final UUID BTMODULEUUID = UUID.fromString("ff85d43d-7f0c-4aa8-a89f-c102ec9993db");
     // String for MAC address
-    private static final String MAC_ADDRESS = "YOUR:MAC:ADDRESS:HERE";
+    private static  String MAC_ADDRESS;
 
     private StringBuilder recDataString = new StringBuilder();
 
@@ -40,6 +43,8 @@ public class BluetoothService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d("BT SERVICE", "SERVICE CREATED");
+        if (!SelfUser.getIsHost())
+            MAC_ADDRESS = SelfUser.getHostAdress();
         stopThread = false;
     }
 
@@ -55,6 +60,12 @@ public class BluetoothService extends Service {
                     recDataString.append(readMessage);//enter code here
                     Log.d("RECORDED", recDataString.toString());
                     // Do stuff here with your data, like adding it to the database
+                    if (recDataString.toString().equals("video")){
+                        Intent myIntent = new Intent(getBaseContext(), PlayVideoActivity.class);
+                        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(myIntent);
+
+                    }
                 }
                 recDataString.delete(0, recDataString.length());                    //clear all string data
             }
@@ -87,6 +98,12 @@ public class BluetoothService extends Service {
 
     //Checks that the Android device Bluetooth is available and prompts to be turned on if off
     private void checkBTState() {
+        if (SelfUser.getIsHost()){
+            new ConnectedThread(SelfUser.mSocket);
+        }
+        else{
+
+
         if (btAdapter == null) {
         Log.d("BT SERVICE", "BLUETOOTH NOT SUPPORTED BY DEVICE, STOPPING SERVICE");
         stopSelf();
@@ -108,6 +125,11 @@ public class BluetoothService extends Service {
                 stopSelf();
             }
         }
+        }
+    }
+
+    public void CreateConnectingThread(BluetoothDevice device){
+        new ConnectingThread(device);
     }
 
     // New Class for Connecting Thread
@@ -203,6 +225,11 @@ public class BluetoothService extends Service {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+            SelfUser.mmOutStream = tmpOut;
+            SelfUser.mmInStream = tmpIn;
+            write("lol");
+            Log.d("DEBUG BT", tmpIn.toString());
+            Log.d("BT SERVICE", tmpOut.toString());
         }
 
         public void run() {

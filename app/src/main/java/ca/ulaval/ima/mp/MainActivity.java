@@ -23,6 +23,8 @@ import ca.ulaval.ima.mp.fragment.HoteFragment;
 import ca.ulaval.ima.mp.fragment.PlayFragment;
 import ca.ulaval.ima.mp.fragment.PropertiesFragment;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
+import ca.ulaval.ima.mp.model.SelfUser;
+import ca.ulaval.ima.mp.service.BluetoothService;
 
 public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener{
 
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         fragmentManager.beginTransaction()
                 .replace(R.id.main_content, current_fragment)
                 .commit();
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -126,10 +129,6 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
 
     public BottomNavigationView getNavigationBottomView(){
         return this.navigation;
-    }
-
-    public Fragment getPropertiesFragment(){
-        return this.properties_fragment;
     }
 
     @Override

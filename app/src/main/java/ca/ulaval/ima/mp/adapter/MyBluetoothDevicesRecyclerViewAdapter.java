@@ -3,6 +3,7 @@ package ca.ulaval.ima.mp.adapter;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import ca.ulaval.ima.mp.R;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
 import ca.ulaval.ima.mp.model.SelfUser;
+import ca.ulaval.ima.mp.service.BluetoothService;
 
 import java.util.List;
 
@@ -50,6 +52,9 @@ public class MyBluetoothDevicesRecyclerViewAdapter extends RecyclerView.Adapter<
 
                 Toast.makeText(getContext(), "Tentative de connection avec l hote", Toast.LENGTH_LONG).show();
                 SelfUser.setmHost(device);
+                BluetoothService service = new BluetoothService();
+                SelfUser.mService = new Intent(getContext(), BluetoothService.class);
+                getContext().startService(new Intent(getContext(), BluetoothService.class));
 
                 //TODO: Lorsque lhote envoie la video, on change de tab
                 /*
