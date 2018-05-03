@@ -60,8 +60,12 @@ public class BluetoothService extends Service {
                     recDataString.append(readMessage);//enter code here
                     Log.d("RECORDED", recDataString.toString());
                     // Do stuff here with your data, like adding it to the database
-                    Intent myIntent = new Intent(getBaseContext(), PlayVideoActivity.class);
-                    startActivity(myIntent);
+                    if (recDataString.toString() == "lol"){
+                        Intent myIntent = new Intent(getBaseContext(), PlayVideoActivity.class);
+                        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(myIntent);
+
+                    }
                 }
                 recDataString.delete(0, recDataString.length());                    //clear all string data
             }
