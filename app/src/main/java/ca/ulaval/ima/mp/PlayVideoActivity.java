@@ -74,7 +74,8 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
             Context context = getApplicationContext();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             video_id = prefs.getString("video_id", "Ri7GzCUTC5s");
-            SelfUser.mmOutStream.write(video_id.getBytes());
+            String msg = "video:"+video_id;
+            SelfUser.mmOutStream.write(msg.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
