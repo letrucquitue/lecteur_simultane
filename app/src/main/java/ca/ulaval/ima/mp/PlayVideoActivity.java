@@ -52,7 +52,7 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
         String str = "video";
         try {
             SelfUser.mmOutStream.write(str.getBytes());
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }
