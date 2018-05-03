@@ -3,6 +3,7 @@ package ca.ulaval.ima.mp;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -32,11 +33,23 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
 
     private YouTubePlayerView youtube_player_view;
     private YouTubePlayer.OnInitializedListener onInitializedListener;
+    private String video_id = "Ri7GzCUTC5s";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_video);
+
+        //IF CLIENT
+        Intent intent = getIntent();
+        String video_id = intent.getStringExtra("video_id");
+        if(video_id.equals("") == false && video_id != null){
+            Context context = getApplicationContext();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor=prefs.edit();
+            editor.putString("video_id", video_id);
+            editor.commit();
+        }
 
         youtube_player_view = (YouTubePlayerView) findViewById(R.id.youtube_player_view);
         onInitializedListener = new YouTubePlayer.OnInitializedListener() {
@@ -56,10 +69,8 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
         };
 
         youtube_player_view.initialize(GOOGLE_YOUTUBE_API_KEY,onInitializedListener);
-        String str = "video";
         try {
-            SelfUser.mmOutStream.write(str.getBytes());
-
+            SelfUser.mmOutStream.write(video_id.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
