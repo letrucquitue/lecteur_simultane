@@ -234,7 +234,7 @@ public class HoteFragment extends android.app.Fragment {
                     socket = mmServerSocket.accept();
                     SelfUser.mSocket = socket;
                     Log.d("Socket :", socket.toString());
-                    getContext().startService(new Intent(getContext(), BluetoothService.class));
+                    getContext().startService(new Intent(getActivity().getApplicationContext(), BluetoothService.class));
                 } catch (IOException e) {
                     Log.e("Erreur serveur", "Socket's accept() method failed", e);
                     break;

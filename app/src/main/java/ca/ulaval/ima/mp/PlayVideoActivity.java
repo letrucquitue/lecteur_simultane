@@ -49,9 +49,10 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
         };
 
         youtube_player_view.initialize(GOOGLE_YOUTUBE_API_KEY,onInitializedListener);
-        String str = "lol";
+        String str = "video";
         try {
             SelfUser.mmOutStream.write(str.getBytes());
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
