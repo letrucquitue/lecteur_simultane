@@ -93,7 +93,7 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
                 //Finding devices
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    mDeviceList.add(new BluetoothDevices(device.getName(), device.getAddress()));
+                    mDeviceList.add(new BluetoothDevices(device.getName(), device.getAddress(), device));
                 }
                 mAdapter.notifyDataSetChanged();
             }
@@ -149,8 +149,9 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
             String deviceName = device.getName();
             String deviceHardwareAddress = device.getAddress(); // MAC address
             Log.d(deviceName, deviceHardwareAddress);
-            mDeviceList.add(new BluetoothDevices(deviceName,deviceHardwareAddress));
+            mDeviceList.add(new BluetoothDevices(deviceName,deviceHardwareAddress, device));
             mAdapter.notifyDataSetChanged();
+            new ConnectThread(device);
         }
     }
 
@@ -226,6 +227,7 @@ public class BluetoothDevicesFragment extends android.app.Fragment {
                 Log.e("Erreur client", "Socket's create() method failed", e);
             }
             mmSocket = tmp;
+            start();
         }
 
         public void run() {

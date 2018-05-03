@@ -1,8 +1,14 @@
 package ca.ulaval.ima.mp.model;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Classe qui gère l'utilisateur courant. Les autres users sont considérés comme des devices et non des users
@@ -20,6 +26,9 @@ public class SelfUser {
     public static boolean mIsHost; //Si on est un host a ce moment ou un invité. On peut switcher entre les deux à tout moment
     public static ArrayList<BluetoothDevices> mConnectedDevices; //Les appareils connetés à nous (Si hote)
     public static VideoModel mVideo; //La vidéo courante
+    public static BluetoothServerSocket mServerSocket = null;
+    public static BluetoothAdapter mAdapter;
+    public static UUID mUUID = UUID.fromString("ff85d43d-7f0c-4aa8-a89f-c102ec9993db");
 
     SelfUser(){
         mIsHost = false;
@@ -85,6 +94,8 @@ public class SelfUser {
         }
         Log.d("Appareils connectes", str);
     }
+
+    
 
 
 

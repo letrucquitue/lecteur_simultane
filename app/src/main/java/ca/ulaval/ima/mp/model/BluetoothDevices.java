@@ -1,5 +1,7 @@
 package ca.ulaval.ima.mp.model;
 
+import android.bluetooth.BluetoothDevice;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,13 +16,15 @@ import java.util.Map;
 public class BluetoothDevices {
     private String mNom;
     private String mAdresse;
+    private BluetoothDevice mDevice;
     public static final List<BluetoothDevices.BluetoothItem> ITEMS = new ArrayList<>();  //Simplement pour les adapter
     public static final Map<String, BluetoothItem> ITEM_MAP = new HashMap<String, BluetoothItem>(); //Simplement pour les adapters
     public static final ArrayList<BluetoothDevices> bluetoothsDevices = new ArrayList<>(); //Liste de tous les appareils, pairés ou non.
 
-    public BluetoothDevices(String pNom, String pAdresse){
+    public BluetoothDevices(String pNom, String pAdresse, BluetoothDevice device){
         this.mNom = pNom;
         this.mAdresse = pAdresse;
+        this.mDevice = device;
     }
 
 
@@ -29,6 +33,9 @@ public class BluetoothDevices {
     }
     public String getAdresse(){
         return mAdresse;
+    }
+    public BluetoothDevice getDevice(){
+        return mDevice;
     }
 
 

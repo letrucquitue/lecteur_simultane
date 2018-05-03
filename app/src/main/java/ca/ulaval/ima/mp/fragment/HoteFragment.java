@@ -30,6 +30,7 @@ import ca.ulaval.ima.mp.R;
 import ca.ulaval.ima.mp.adapter.MyBluetoothDevicesRecyclerViewAdapter;
 import ca.ulaval.ima.mp.adapter.MyHoteDevicesInvitesRecyclerViewAdapter;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
+import ca.ulaval.ima.mp.model.SelfUser;
 
 /**
  * Classe qui trouve les invités et accepte leurs demandes
@@ -89,7 +90,7 @@ public class HoteFragment extends android.app.Fragment {
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
                 Log.d(deviceName, deviceHardwareAddress);
-                mDeviceList.add(new BluetoothDevices(deviceName,deviceHardwareAddress));
+                mDeviceList.add(new BluetoothDevices(deviceName,deviceHardwareAddress, device));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
                 MyHoteDevicesInvitesRecyclerViewAdapter adapter = new MyHoteDevicesInvitesRecyclerViewAdapter( mDeviceList, getActivity().getApplicationContext());
                 recyclerView.setAdapter(adapter);
@@ -104,7 +105,7 @@ public class HoteFragment extends android.app.Fragment {
                 String action = intent.getAction();
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    mDeviceList.add(new BluetoothDevices(device.getName(), device.getAddress()));
+                    mDeviceList.add(new BluetoothDevices(device.getName(), device.getAddress(), device));
                 }
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
                 mAdapter = new MyHoteDevicesInvitesRecyclerViewAdapter(mDeviceList, getActivity().getApplicationContext());
@@ -152,6 +153,7 @@ public class HoteFragment extends android.app.Fragment {
                 }
             }
         });
+        AcceptThread accept = new AcceptThread();
         return view;
     }
 
@@ -215,17 +217,23 @@ public class HoteFragment extends android.app.Fragment {
             BluetoothServerSocket tmp = null;
             try {
                 tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("Lecteur simultané", mUUID);
+                Log.e("Erreur serveur", "Socket's accept(gdfgdfgdfgdfg) method failed");
+
             } catch (IOException e) {
                 Log.e("Erreur serveur", "Socket's listen() method failed", e);
             }
             mmServerSocket = tmp;
+            SelfUser.mServerSocket = mmServerSocket;
+            start();
         }
 
         public void run() {
             BluetoothSocket socket = null;
+            Log.e("Erreur dfLOL", "Socket's accept() method failed");
             while (true) {
                 try {
                     socket = mmServerSocket.accept();
+                    Log.e("Erreur LOL", "Socket's accept() method failed");
                 } catch (IOException e) {
                     Log.e("Erreur serveur", "Socket's accept() method failed", e);
                     break;

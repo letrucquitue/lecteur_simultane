@@ -12,6 +12,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 import ca.ulaval.ima.mp.fragment.BluetoothDevicesFragment.OnListFragmentInteractionListener;
 import ca.ulaval.ima.mp.adapter.FragmentAdapter;
 import ca.ulaval.ima.mp.fragment.ChooseVideoFragment;
@@ -20,12 +22,14 @@ import ca.ulaval.ima.mp.fragment.HoteFragment;
 import ca.ulaval.ima.mp.fragment.PlayFragment;
 import ca.ulaval.ima.mp.fragment.PropertiesFragment;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
+import ca.ulaval.ima.mp.service.BluetoothService;
 
 public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener{
 
     private BottomNavigationView navigation;
     private ArrayList<Fragment> fragments;
     private Fragment current_fragment;
+    private BluetoothService mBoundService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         fragments.add(new ConnectionFragment());
         fragments.add(new PlayFragment());
         */
+
+
 
         //DEFAULT FRAGMENT
         FragmentManager fragmentManager = getFragmentManager();
@@ -89,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
 
     public BottomNavigationView getNavigationBottomView(){
         return this.navigation;
+    }
+
+    @Override
+    public void onListFragmentInteraction(BluetoothDevices.BluetoothItem item) {
+
     }
 
     public interface OnListFragmentInteractionListener {
