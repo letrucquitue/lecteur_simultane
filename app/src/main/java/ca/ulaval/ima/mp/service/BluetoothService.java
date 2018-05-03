@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
+import ca.ulaval.ima.mp.PlayVideoActivity;
 import ca.ulaval.ima.mp.model.SelfUser;
 
 /**
@@ -34,7 +35,7 @@ public class BluetoothService extends Service {
     // SPP UUID service - this should work for most devices
     private static final UUID BTMODULEUUID = UUID.fromString("ff85d43d-7f0c-4aa8-a89f-c102ec9993db");
     // String for MAC address
-    private static final String MAC_ADDRESS = SelfUser.getHostAdress();
+    private static  String MAC_ADDRESS;
 
     private StringBuilder recDataString = new StringBuilder();
 
@@ -42,6 +43,8 @@ public class BluetoothService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d("BT SERVICE", "SERVICE CREATED");
+        if (!SelfUser.getIsHost())
+            MAC_ADDRESS = SelfUser.getHostAdress();
         stopThread = false;
     }
 
@@ -57,6 +60,8 @@ public class BluetoothService extends Service {
                     recDataString.append(readMessage);//enter code here
                     Log.d("RECORDED", recDataString.toString());
                     // Do stuff here with your data, like adding it to the database
+                    Intent myIntent = new Intent(getBaseContext(), PlayVideoActivity.class);
+                    startActivity(myIntent);
                 }
                 recDataString.delete(0, recDataString.length());                    //clear all string data
             }
