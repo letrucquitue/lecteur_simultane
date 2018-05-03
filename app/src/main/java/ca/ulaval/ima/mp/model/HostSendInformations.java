@@ -1,13 +1,25 @@
 package ca.ulaval.ima.mp.model;
 
+import android.util.Log;
+
+import java.io.IOException;
+
 /**
 Le host envoie les informations par cette classe. La liste des appareils connectés se trouve dans la classe SelfUser. Elle est atteignable grâce a l'appel static.
  */
 
 public class HostSendInformations {
 
-    public void sendVideo(BluetoothDevices device){
-        //TODO : Envoyer le video au client
+    public void sendVideo(BluetoothDevices device) {
+        String input = "lol";
+        byte[] msgBuffer = input.getBytes();           //converts entered String into bytes
+        try {
+            SelfUser.mmOutStream.write(msgBuffer);                //write bytes over BT connection via outstream
+        } catch (IOException e) {
+            //if you cannot write, close the application
+            Log.d("DEBUG BT", "UNABLE TO READ/WRITE " + e.toString());
+            Log.d("BT SERVICE", "UNABLE TO READ/WRITE, STOPPING SERVICE");
+        }
     }
 
     public void syncVideo(){

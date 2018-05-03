@@ -1,8 +1,11 @@
 package ca.ulaval.ima.mp.model;
 
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.util.Log;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import ca.ulaval.ima.mp.service.BluetoothService;
@@ -24,6 +27,9 @@ public class SelfUser {
     public static ArrayList<BluetoothDevices> mConnectedDevices; //Les appareils connetés à nous (Si hote)
     public static VideoModel mVideo; //La vidéo courante
     public static Intent mService;
+    public static BluetoothSocket mSocket = null;
+    public static InputStream mmInStream;
+    public static OutputStream mmOutStream;
 
     SelfUser(){
         mIsHost = false;
