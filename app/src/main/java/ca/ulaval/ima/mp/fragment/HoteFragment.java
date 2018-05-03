@@ -31,6 +31,7 @@ import ca.ulaval.ima.mp.adapter.MyBluetoothDevicesRecyclerViewAdapter;
 import ca.ulaval.ima.mp.adapter.MyHoteDevicesInvitesRecyclerViewAdapter;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
 import ca.ulaval.ima.mp.model.SelfUser;
+import ca.ulaval.ima.mp.service.BluetoothService;
 
 /**
  * Classe qui trouve les invités et accepte leurs demandes
@@ -231,6 +232,7 @@ public class HoteFragment extends android.app.Fragment {
                     socket = mmServerSocket.accept();
                     SelfUser.mSocket = socket;
                     Log.d("Socket :", socket.toString());
+                    getContext().startService(new Intent(getContext(), BluetoothService.class));
                 } catch (IOException e) {
                     Log.e("Erreur serveur", "Socket's accept() method failed", e);
                     break;
