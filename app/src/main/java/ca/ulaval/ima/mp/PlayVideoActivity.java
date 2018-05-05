@@ -33,7 +33,7 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
 
     private YouTubePlayerView youtube_player_view;
     private YouTubePlayer.OnInitializedListener onInitializedListener;
-    private String video_id = "Ri7GzCUTC5s";
+    private final String DEFAULT_VIDEO = "Ri7GzCUTC5s";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,24 +58,28 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
                 //VIDEO ID FROM PREFERENCES
                 Context context = getApplicationContext();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                String video_id = prefs.getString("video_id", "Ri7GzCUTC5s");
+                String video_id = prefs.getString("video_id", DEFAULT_VIDEO);
+                //on lance la vidéo en plein écran
+                youTubePlayer.setFullscreen(true);
                 youTubePlayer.loadVideo(video_id);
             }
 
             @Override
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-                Log.e("FAIL","C est casse");
+                Log.e("FAIL","Erreur lors du chargement vidéo");
             }
         };
 
+        //init youtube player
         youtube_player_view.initialize(GOOGLE_YOUTUBE_API_KEY,onInitializedListener);
 
+        //si l'appareil est hote
         if(SelfUser.getIsHost()) {
             try {
                 //VIDEO ID FROM PREFERENCES
                 Context context = getApplicationContext();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                video_id = prefs.getString("video_id", "Ri7GzCUTC5s");
+                video_id = prefs.getString("video_id", DEFAULT_VIDEO);
                 String msg = "video:" + video_id;
                 //envoi video id au client
                 SelfUser.mmOutStream.write(msg.getBytes());
