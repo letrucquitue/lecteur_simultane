@@ -69,15 +69,19 @@ public class PlayVideoActivity extends YouTubeBaseActivity {
         };
 
         youtube_player_view.initialize(GOOGLE_YOUTUBE_API_KEY,onInitializedListener);
-        try {
-            //VIDEO ID FROM PREFERENCES
-            Context context = getApplicationContext();
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            video_id = prefs.getString("video_id", "Ri7GzCUTC5s");
-            String msg = "video:"+video_id;
-            SelfUser.mmOutStream.write(msg.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        if(SelfUser.getIsHost()) {
+            try {
+                //VIDEO ID FROM PREFERENCES
+                Context context = getApplicationContext();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                video_id = prefs.getString("video_id", "Ri7GzCUTC5s");
+                String msg = "video:" + video_id;
+                //envoi video id au client
+                SelfUser.mmOutStream.write(msg.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
