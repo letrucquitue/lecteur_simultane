@@ -6,32 +6,41 @@
     android:layout_height="match_parent"
     android:weightSum="1"
     tools:context="ca.ulaval.ima.mp.fragment.HoteFragment">
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="ca.ulaval.ima.mp.fragment.BluetoothDevicesFragment"
-    android:layout_width="368dp"
-    android:layout_height="462dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="ca.ulaval.ima.mp.fragment.BluetoothDevicesFragment"
-    tools:listitem="@layout/fragment_bluetoothdevices" >
+
+    <TextView
+        android:id="@+id/title_client"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/subtitle"
+        android:text="Liste d'hôtes" />
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/list"
+        android:name="ca.ulaval.ima.mp.fragment.BluetoothDevicesFragment"
+        android:layout_width="368dp"
+        android:layout_height="462dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_client"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="ca.ulaval.ima.mp.fragment.BluetoothDevicesFragment"
+        tools:listitem="@layout/fragment_bluetoothdevices" >
 
 </android.support.v7.widget.RecyclerView>
 
 
     <Button
         android:id="@+id/btnDecouvert"
+        style="@style/button"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_width="0dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="100dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_weight="0.5"
@@ -42,10 +51,11 @@
 
     <Button
         android:id="@+id/btnUpdate"
+        style="@style/button"
         android:layout_height="wrap_content"
         android:layout_width="0dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="100dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_weight="0.5"

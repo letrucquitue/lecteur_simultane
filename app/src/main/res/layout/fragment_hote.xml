@@ -8,7 +8,12 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-
+    <TextView
+        android:id="@+id/title_host"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/subtitle"
+        android:text="Liste de demandes de connexion" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
@@ -21,16 +26,17 @@
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_host"
         tools:context="ca.ulaval.ima.mp.fragment.HoteDevicesInvitesFragment"
         tools:listitem="@layout/fragment_hotedevicesinvites" />
 
     <Button
         android:id="@+id/btnDecouvert"
+        style="@style/button"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_width="0dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="100dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_weight="0.5"
@@ -41,10 +47,11 @@
 
     <Button
         android:id="@+id/btnUpdate"
+        style="@style/button"
         android:layout_height="wrap_content"
         android:layout_width="0dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="100dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_weight="0.5"
