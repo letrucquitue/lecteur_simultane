@@ -26,9 +26,9 @@ import ca.ulaval.ima.mp.model.SelfUser;
  * Created by LEOBL on 16/04/2018.
  */
 
-public class ConnectionFragment extends Fragment{
-    private Button become_host_btn,join_host_btn;
+//Fragment de l'onglet Connexion
 
+public class ConnectionFragment extends Fragment{
     private Button btnInviteNotPair;
     private Button btnHote;
     private Context mContext;
@@ -89,26 +89,5 @@ public class ConnectionFragment extends Fragment{
         });
 
         return view;
-    }
-
-    private class BecomeHost implements View.OnClickListener{
-        public void onClick(View v){
-            //launch Socket BT
-            Fragment fragment = new ConnectionFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("mode", "host");
-            fragment.setArguments(bundle);
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.main_content, fragment).commit();
-        }
-    }
-
-    private class JoinHost implements View.OnClickListener{
-        public void onClick(View v){
-            //join
-            Fragment fragment = new ClientFragment();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.main_content, fragment).commit();
-        }
     }
 }
