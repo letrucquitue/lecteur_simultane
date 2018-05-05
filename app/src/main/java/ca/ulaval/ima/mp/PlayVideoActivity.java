@@ -22,7 +22,6 @@ import java.io.IOException;
 
 import ca.ulaval.ima.mp.fragment.ChooseVideoFragment;
 import ca.ulaval.ima.mp.fragment.ConnectionFragment;
-import ca.ulaval.ima.mp.fragment.PlayFragment;
 import ca.ulaval.ima.mp.fragment.PropertiesFragment;
 import ca.ulaval.ima.mp.model.HostSendInformations;
 import ca.ulaval.ima.mp.model.SelfUser;

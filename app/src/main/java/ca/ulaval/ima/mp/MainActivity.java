@@ -16,11 +16,9 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 
 import ca.ulaval.ima.mp.fragment.BluetoothDevicesFragment.OnListFragmentInteractionListener;
-import ca.ulaval.ima.mp.adapter.FragmentAdapter;
 import ca.ulaval.ima.mp.fragment.ChooseVideoFragment;
 import ca.ulaval.ima.mp.fragment.ConnectionFragment;
 import ca.ulaval.ima.mp.fragment.HoteFragment;
-import ca.ulaval.ima.mp.fragment.PlayFragment;
 import ca.ulaval.ima.mp.fragment.PropertiesFragment;
 import ca.ulaval.ima.mp.model.BluetoothDevices;
 import ca.ulaval.ima.mp.model.SelfUser;
