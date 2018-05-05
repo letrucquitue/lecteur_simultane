@@ -49,14 +49,14 @@ public class ChooseVideoFragment extends Fragment {
     private static String CHANNEL_GET_URL_BEFORE_KEYWORDS = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=";
     private static String CHANNEL_GET_URL_AFTER_KEYWORDS = "&type=video&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
     private static String VIDEO_DETAILS_GET_URL = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&key="+GOOGLE_YOUTUBE_API_KEY+"&id=";
-    //private static String PLAYLIST_ID = "PLFsQleAWXsj_4yDeebiIADdH5FMayBiJo";//here you should use your playlist id for testing purpose you can use this api also
     //private static String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=" + PLAYLIST_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY + "";
 
     private EditText search;
     private RecyclerView mList_videos = null;
     private VideoListAdapter adapter = null;
     private ArrayList<VideoModel> mListData = new ArrayList<>();
-    private String keywords_to_search = "Denis Brogniart AH";
+    private String keywords_to_search = "";
+    private final String DEFAULT_KEYWORDS = "Denis Brogniart AH";
 
     public ChooseVideoFragment() {
         // Required empty public constructor
@@ -72,35 +72,13 @@ public class ChooseVideoFragment extends Fragment {
 
         //Gestion du champ "Rechercher"
         search = (EditText) view.findViewById(R.id.search_field);
-        //Récupérer l'état sauvegardé
-        Log.e("Before : ","Restoring");
-        if (savedInstanceState != null) {
-            Log.e("Bundle : ","Restoring");
-            String saved_keywords = savedInstanceState.getString("saved_keywords");
-            Log.e("Restored keywords : ",saved_keywords);
-            if(saved_keywords != "" && saved_keywords != null){
-                search.setText(saved_keywords);
-            }
-        }
-        Log.e("After : ","Restoring");
-
-        Bundle arg = getArguments();
-        Log.e("Before : ","Arguments");
-        if(arg != null){
-            Log.e("Bundle : ","Arguments");
-            String saved_keywords = arg.getString("saved_keywords");
-            Log.e("Restored keywords : ",saved_keywords);
-            if(saved_keywords != "" && saved_keywords != null){
-                search.setText(saved_keywords);
-            }
-        }
-        Log.e("After : ","Arguments");
 
         //KEYWORDS FROM PREFERENCES
         Context context = getActivity().getApplicationContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String keywords = prefs.getString("keywords", "");
-        search.setText(keywords);
+        String keywords = prefs.getString("keywords", DEFAULT_KEYWORDS);
+        if(keywords != DEFAULT_KEYWORDS)
+            search.setText(keywords);
 
         //MAJ LIST
         mList_videos = (RecyclerView) view.findViewById(R.id.mList_videos);
@@ -162,36 +140,22 @@ public class ChooseVideoFragment extends Fragment {
         adapter = new VideoListAdapter(getActivity(), mListData, new OnItemClickListener() {
             @Override
             public void onItemClick(VideoModel item) {
-                //maj du bottom navigation view
+                //maj du bottom navigation view (afficher onglet properties)
                 BottomNavigationView nav = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
                 nav.setSelectedItemId(R.id.navigation_properties);
 
-                //PREFERENCES
+                //SET VIDEO ID ON PREFERENCES
                 Context context = getActivity().getApplicationContext();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                 SharedPreferences.Editor editor=prefs.edit();
                 editor.putString("video_id", item.getId());
                 editor.commit();
 
-                Log.e("Item clicked : ",item.getId());
-
                 //go to properties fragment with video id parameter
                 PropertiesFragment fragment = new PropertiesFragment();
-                //PropertiesFragment fragment = (PropertiesFragment) getFragmentManager().findFragmentByTag("properties_fragment");
-                //Bundle arguments = new Bundle();
-                //arguments.putString( "video_id" , item.getId());
-                //fragment.setArguments(arguments);
-                //fragment.getArguments().putString( "video_id" , item.getId());
                 final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                //ft.replace(R.id.main_content, fragment , "fragment_properties");
-                ft.show(fragment);
+                ft.replace(R.id.main_content, fragment , "fragment_properties");
                 ft.commit();
-
-
-
-                /*Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra(VideoModel.class.toString(), item);
-                startActivity(intent);*/
             }
 
             @Override
@@ -326,41 +290,4 @@ public class ChooseVideoFragment extends Fragment {
         return mList;
 
     }
-
-    //sauvegarde de l'état
-    @Override
-    public void onSaveInstanceState(Bundle saved_bundle) {
-        super.onSaveInstanceState(saved_bundle);
-        Log.e("ChooseVideoFragment : ","onSaveInstanceState()");
-        saved_bundle.putString("saved_keywords", search.getText().toString());
-        Log.e("Saving state : ","Done with "+saved_bundle.getString("saved_keywords"));
-    }
-
-    @Override
-    public void onPause(){
-        Log.e("ChooseVideoFragment : ", "onPause()");
-        /*Bundle args = new Bundle();
-        args.putString("saved_keywords",search.getText().toString());
-        this.setArguments(args);*/
-        super.onPause();
-    }
-
-    @Override
-    public void onResume(){
-        Log.e("ChooseVideoFragment : ", "onResume()");
-        Bundle args = getArguments();
-        if(args != null){
-            Log.e("Restored keywords : ",args.getString("saved_keywords"));
-        }
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        Log.e("ChooseVideoFragment : ","onDestroy()");
-        //this.onSaveInstanceState(new Bundle());
-    }
-
-
 }
