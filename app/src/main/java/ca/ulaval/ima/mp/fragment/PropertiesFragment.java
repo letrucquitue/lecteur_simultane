@@ -39,13 +39,6 @@ public class PropertiesFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_properties, container, false);
 
-        //VIDEO ID FROM
-        /*video_id_field = (EditText) view.findViewById(R.id.video_id_field);
-        if(getArguments() != null) {
-            Bundle arguments = getArguments();
-            video_id_field.setText(arguments.getString("video_id"));
-        }*/
-
         //VIDEO ID FROM PREFERENCES
         video_id_field = (EditText) view.findViewById(R.id.video_id_field);
         Context context = getActivity().getApplicationContext();
